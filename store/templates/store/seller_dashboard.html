@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+{% block title %}Seller hub{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><div class="eyebrow">Seller hub</div><h1>{{ seller.seller_name }}</h1><p>{{ seller.email }}{% if seller.rating %} · ★ {{ seller.rating }} seller rating{% endif %}</p></div>
+  <div class="row"><a href="/seller/product/add/" class="btn btn-primary">+ Add product</a><a href="/seller/logout/" class="btn btn-ghost">Log out</a></div>
+</div>
+
+<div class="stats" style="margin-bottom:26px">
+  <div class="stat"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5zM3 8v8l9 5 9-5V8"/></svg></div><div class="label">Products listed</div><div class="value">{{ sales.products_listed|default:0 }}</div><div class="sub">{{ low_stock }} low on stock</div></div>
+  <div class="stat"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></div><div class="label">Units sold</div><div class="value">{{ sales.units_sold|default:0 }}</div><div class="sub">{{ sales.paid_orders|default:0 }} paid orders</div></div>
+  <div class="stat"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3h12M6 8h12M14 21 6 13h3a5 5 0 0 0 0-10"/></svg></div><div class="label">Revenue</div><div class="value">₹{{ sales.revenue|default:0|floatformat:"0g" }}</div><div class="sub">from paid orders</div></div>
+</div>
+
+<div class="panel-title"><h2>Your products</h2>
+  <form method="get" class="row"><input type="search" name="q" value="{{ q }}" placeholder="Search your products" style="width:240px"><button type="submit" class="btn-soft btn-sm">Search</button></form></div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Product</th><th>Category</th><th class="num">Price</th><th class="num">Stock</th><th></th></tr></thead>
+    <tbody>
+    {% for product in products %}
+      <tr>
+        <td><img class="thumb" src="{% url 'product_image' product.product_id %}" alt="" loading="lazy"></td>
+        <td><a href="{% url 'product_detail' product.product_id %}" style="color:var(--ink);font-weight:650">{{ product.product_title }}</a><div class="muted" style="font-size:.82rem">#{{ product.product_id }} · {{ product.brand }}</div></td>
+        <td>{{ product.gender }} · {{ product.category }}</td>
+        <td class="num">₹{{ product.price|floatformat:"0g" }}</td>
+        <td class="num">{% if product.stock_quantity <= 5 %}<span class="badge badge-warn">{{ product.stock_quantity }}</span>{% else %}{{ product.stock_quantity }}{% endif %}</td>
+        <td class="num"><div class="row" style="justify-content:flex-end">
+          <a href="/seller/product/{{ product.product_id }}/edit/" class="btn btn-soft btn-sm">Edit</a>
+          <form method="POST" action="/seller/product/{{ product.product_id }}/delete/" data-confirm="Delete this product?">{% csrf_token %}<button type="submit" class="btn-danger btn-sm">Delete</button></form></div></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6" class="muted" style="text-align:center;padding:30px">No products yet. <a href="/seller/product/add/">Add your first one</a>.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include 'store/_pagination.html' %}
+{% endblock %}

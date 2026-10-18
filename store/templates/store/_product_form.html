@@ -1,0 +1,41 @@
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+<form method="POST" class="card">
+  {% csrf_token %}
+  <div class="field-row">
+    <div class="field"><label for="product_id">Product ID</label>
+      {% if product %}<input id="product_id" type="number" value="{{ product.product_id }}" readonly>
+      {% else %}<input id="product_id" type="number" name="product_id" min="1" value="{{ form.product_id }}" placeholder="Leave blank for the next free ID">{% endif %}</div>
+    <div class="field"><label for="product_title">Product title</label><input id="product_title" type="text" name="product_title" value="{% if product %}{{ product.product_title|default:'' }}{% else %}{{ form.product_title }}{% endif %}" required></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><label for="brand">Brand</label><input id="brand" type="text" name="brand" value="{% if product %}{{ product.brand|default:'' }}{% else %}{{ form.brand }}{% endif %}"></div>
+    <div class="field"><label for="colour">Colour</label><input id="colour" type="text" name="colour" value="{% if product %}{{ product.colour|default:'' }}{% else %}{{ form.colour }}{% endif %}"></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><label for="gender">For</label>
+      {% firstof product.gender form.gender "" as g %}<select id="gender" name="gender">
+        <option value="">—</option>
+        <option value="Men" {% if g == 'Men' %}selected{% endif %}>Men</option><option value="Women" {% if g == 'Women' %}selected{% endif %}>Women</option>
+        <option value="Boys" {% if g == 'Boys' %}selected{% endif %}>Boys</option><option value="Girls" {% if g == 'Girls' %}selected{% endif %}>Girls</option>
+      </select></div>
+    <div class="field"><label for="category">Category</label>
+      {% firstof product.category form.category "" as c %}<select id="category" name="category">
+        <option value="">—</option><option value="Footwear" {% if c == 'Footwear' %}selected{% endif %}>Footwear</option><option value="Apparel" {% if c == 'Apparel' %}selected{% endif %}>Apparel</option>
+      </select></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><label for="sub_category">Sub-category</label><input id="sub_category" type="text" name="sub_category" value="{% if product %}{{ product.sub_category|default:'' }}{% else %}{{ form.sub_category }}{% endif %}" placeholder="Shoes, Topwear, Sandal…"></div>
+    <div class="field"><label for="product_type">Product type</label><input id="product_type" type="text" name="product_type" value="{% if product %}{{ product.product_type|default:'' }}{% else %}{{ form.product_type }}{% endif %}" placeholder="Casual Shoes, Tshirts…"></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><label for="price">Price (₹)</label><input id="price" type="number" name="price" step="0.01" min="0" value="{% if product %}{{ product.price|default:''|stringformat:'s' }}{% else %}{{ form.price }}{% endif %}" required></div>
+    <div class="field"><label for="stock_quantity">Stock</label><input id="stock_quantity" type="number" name="stock_quantity" min="0" value="{% if product %}{{ product.stock_quantity|default_if_none:'' }}{% else %}{{ form.stock_quantity }}{% endif %}" required></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><label for="usage_type">Usage</label><input id="usage_type" type="text" name="usage_type" value="{% if product %}{{ product.usage_type|default:'' }}{% else %}{{ form.usage_type }}{% endif %}" placeholder="Casual, Sports, Formal…"></div>
+    {% if show_seller %}<div class="field"><label for="seller_id">Seller ID</label><input id="seller_id" type="number" name="seller_id" value="{% if product %}{{ product.seller_id|default_if_none:'' }}{% else %}{{ form.seller_id }}{% endif %}" placeholder="optional"></div>
+    {% else %}<div class="field"><label for="image_url">Image URL <span class="muted">(optional)</span></label><input id="image_url" type="text" name="image_url" value="{% if product %}{{ product.image_url|default:'' }}{% else %}{{ form.image_url }}{% endif %}"></div>{% endif %}
+  </div>
+  <div class="row"><button type="submit" class="btn-primary btn-lg">{% if product %}Save changes{% else %}Add product{% endif %}</button>
+    <a href="{{ back }}" class="btn btn-ghost btn-lg">Cancel</a></div>
+</form>

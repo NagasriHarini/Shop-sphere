@@ -1,0 +1,14 @@
+{% extends 'store/base.html' %}
+{% block title %}Sellers{% endblock %}
+{% block content %}
+{% include 'store/_admin_nav.html' %}
+<div class="page-head"><div><div class="eyebrow">Partners</div><h1>Sellers</h1><p>Sales from paid orders, via the <code>vw_seller_sales</code> view.</p></div></div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Seller</th><th class="num">Rating</th><th class="num">Products</th><th class="num">Paid orders</th><th class="num">Units sold</th><th class="num">Revenue</th></tr></thead>
+  <tbody>{% for s in sellers %}
+    <tr><td><b>{{ s.seller_name }}</b><div class="muted" style="font-size:.82rem">#{{ s.seller_id }}</div></td>
+      <td class="num">{% if s.rating %}★ {{ s.rating }}{% else %}—{% endif %}</td><td class="num">{{ s.products_listed }}</td>
+      <td class="num">{{ s.paid_orders }}</td><td class="num">{{ s.units_sold }}</td><td class="num"><b>₹{{ s.revenue|floatformat:"0g" }}</b></td></tr>
+  {% empty %}<tr><td colspan="6" class="muted">No sellers found.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

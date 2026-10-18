@@ -1,0 +1,22 @@
+{% extends 'store/base.html' %}
+{% block title %}Seller login{% endblock %}
+{% block content %}
+<div class="auth">
+  <div class="auth-card" data-tilt="5">
+    {% include 'store/_brand_mark.html' %}
+    <h1>Seller hub</h1>
+    <p class="muted">Manage your products, prices and stock.</p>
+    {% include 'store/_role_switch.html' with role='seller' %}
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      <div class="field"><label for="email">Seller email</label><input id="email" type="email" name="email" autocomplete="email" required autofocus></div>
+      <div class="field"><label for="password">Password</label>
+        <div class="input-wrap"><input id="password" type="password" name="password" autocomplete="current-password" required>
+          <button type="button" class="toggle" data-toggle-password="password">Show</button></div></div>
+      <button type="submit" class="btn-primary btn-lg btn-block">Log in to seller hub</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'store/base.html' %}
+{% load tz %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+{% include 'store/_admin_nav.html' %}
+<div class="page-head"><div><div class="eyebrow">Admin console</div><h1>Store overview</h1><p>Live numbers from the shopping_funnel database.</p></div>
+  <a href="/adminpanel/analytics/" class="btn btn-primary">Open funnel analytics</a></div>
+
+<div class="stats" style="margin-bottom:26px">
+  <a class="stat" href="/adminpanel/analytics/"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3h12M6 8h12M14 21 6 13h3a5 5 0 0 0 0-10"/></svg></div><div class="label">Revenue</div><div class="value">₹{{ revenue|floatformat:"0g" }}</div><div class="sub">{{ paid_count }} completed payments</div></a>
+  <a class="stat" href="/adminpanel/orders/"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg></div><div class="label">Orders</div><div class="value">{{ orders_count }}</div><div class="sub">{{ pending_count }} awaiting payment</div></a>
+  <a class="stat" href="/adminpanel/customers/"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 11a3 3 0 1 0 0-6M22 21a6 6 0 0 0-4-5.6"/></svg></div><div class="label">Customers</div><div class="value">{{ customers_count }}</div><div class="sub">registered shoppers</div></a>
+  <a class="stat" href="/adminpanel/products/"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div><div class="label">Products</div><div class="value">{{ products_count }}</div><div class="sub">from {{ sellers_count }} sellers</div></a>
+</div>
+
+<div class="split">
+  <section>
+    <div class="panel-title"><h2>Recent orders</h2><a href="/adminpanel/orders/" class="btn btn-soft btn-sm">All orders</a></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th class="num">Total</th><th>Status</th></tr></thead>
+      <tbody>{% for order in recent_orders %}
+        <tr><td><b>#{{ order.order_id }}</b></td><td>{{ order.customer.first_name }} {{ order.customer.last_name }}</td>
+          <td>{{ order.order_date|localtime|date:"d M, H:i" }}</td><td class="num">₹{{ order.total_amount|floatformat:"0g" }}</td><td>{% include 'store/_order_status.html' %}</td></tr>
+      {% empty %}<tr><td colspan="5" class="muted">No orders yet.</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </section>
+  <aside>
+    <div class="panel-title"><h2>Low stock</h2><a href="/adminpanel/products/?stock=low" class="btn btn-soft btn-sm">See all</a></div>
+    <div class="card" style="padding:8px 18px">
+      {% for p in low_stock %}
+        <div class="order-line"><img src="{% url 'product_image' p.product_id %}" alt="" loading="lazy">
+          <div style="flex:1;font-size:.9rem;font-weight:650">{{ p.product_title|truncatechars:42 }}</div>
+          <span class="badge {% if p.stock_quantity == 0 %}badge-bad{% else %}badge-warn{% endif %}">{{ p.stock_quantity }} left</span></div>
+      {% empty %}<p class="muted" style="padding:10px 0">Everything is well stocked.</p>{% endfor %}
+    </div>
+  </aside>
+</div>
+
+<h2 style="margin-top:34px">Quick actions</h2>
+<div class="quick-links">
+  <a class="ql" href="/adminpanel/analytics/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span><div><b>Funnel analytics</b><span>Charts, drop-off, devices</span></div></a>
+  <a class="ql" href="/adminpanel/product/add/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><div><b>Add a product</b><span>New item in the catalogue</span></div></a>
+  <a class="ql" href="/adminpanel/sellers/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 4.5 4h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"/></svg></span><div><b>Seller sales</b><span>Revenue per seller</span></div></a>
+  <a class="ql" href="/adminpanel/funnel/"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></svg></span><div><b>Funnel table</b><span>Stage-by-stage numbers</span></div></a>
+</div>
+{% endblock %}

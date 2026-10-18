@@ -1,0 +1,34 @@
+Output of: python manage.py test store -v 2
+(builds test_shopping_funnel from database/01-09, runs 29 tests, then drops it)
+
+test_customer_is_not_admin (store.tests.AccountTests.test_customer_is_not_admin) ... ok
+test_login_creates_user_session (store.tests.AccountTests.test_login_creates_user_session) ... ok
+test_next_cannot_redirect_to_other_site (store.tests.AccountTests.test_next_cannot_redirect_to_other_site) ... ok
+test_protected_pages_redirect_to_login (store.tests.AccountTests.test_protected_pages_redirect_to_login) ... ok
+test_register_hashes_password (store.tests.AccountTests.test_register_hashes_password) ... ok
+test_register_validates_email (store.tests.AccountTests.test_register_validates_email) ... ok
+test_wrong_password (store.tests.AccountTests.test_wrong_password) ... ok
+test_cart_quantity_check (store.tests.ConstraintTests.test_cart_quantity_check) ... ok
+test_foreign_key (store.tests.ConstraintTests.test_foreign_key) ... ok
+test_order_status_check (store.tests.ConstraintTests.test_order_status_check) ... ok
+test_review_rating_check (store.tests.ConstraintTests.test_review_rating_check) ... ok
+test_unique_customer_email (store.tests.ConstraintTests.test_unique_customer_email) ... ok
+test_catalog_loaded (store.tests.DatabaseBuildTests.test_catalog_loaded) ... ok
+test_triggers_views_procedures_exist (store.tests.DatabaseBuildTests.test_triggers_views_procedures_exist) ... ok
+test_add_to_cart_is_recorded (store.tests.FunnelFlowTests.test_add_to_cart_is_recorded) ... ok
+test_cancel_returns_stock (store.tests.FunnelFlowTests.test_cancel_returns_stock) ... ok
+test_cannot_pay_someone_elses_order (store.tests.FunnelFlowTests.test_cannot_pay_someone_elses_order) ... ok
+test_cannot_pay_twice (store.tests.FunnelFlowTests.test_cannot_pay_twice) ... ok
+test_checkout_creates_order_and_reduces_stock (store.tests.FunnelFlowTests.test_checkout_creates_order_and_reduces_stock) ... ok
+test_checkout_rolls_back_when_stock_runs_out (store.tests.FunnelFlowTests.test_checkout_rolls_back_when_stock_runs_out) ... ok
+test_funnel_view_is_cumulative (store.tests.FunnelFlowTests.test_funnel_view_is_cumulative) ... ok
+test_payment_marks_order_paid_and_logs_event (store.tests.FunnelFlowTests.test_payment_marks_order_paid_and_logs_event) ... ok
+test_public_pages (store.tests.FunnelFlowTests.test_public_pages) ... ok
+test_review_is_recorded (store.tests.FunnelFlowTests.test_review_is_recorded) ... ok
+test_search_is_safe_from_sql_injection (store.tests.FunnelFlowTests.test_search_is_safe_from_sql_injection) ... ok
+test_view_is_recorded (store.tests.FunnelFlowTests.test_view_is_recorded) ... ok
+test_admin_order_status_flow (store.tests.SellerAdminTests.test_admin_order_status_flow) ... ok
+test_admin_pages_load (store.tests.SellerAdminTests.test_admin_pages_load) ... ok
+test_seller_adds_product (store.tests.SellerAdminTests.test_seller_adds_product) ... ok
+Ran 29 tests in 39.828s
+OK

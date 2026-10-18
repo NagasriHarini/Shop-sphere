@@ -1,0 +1,7 @@
+{% extends 'store/base.html' %}
+{% block title %}Add product{% endblock %}
+{% block content %}
+{% include 'store/_admin_nav.html' %}
+<div class="page-head"><div><div class="eyebrow">Catalogue</div><h1>Add a product</h1><p>Every product gets a photo slot, stock tracking and its own funnel.</p></div></div>
+<div style="max-width:820px">{% include 'store/_product_form.html' with back='/adminpanel/products/' show_seller=True %}</div>
+{% endblock %}

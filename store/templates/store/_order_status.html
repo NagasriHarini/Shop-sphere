@@ -1,0 +1,6 @@
+{% if order.order_status == 'Paid' %}<span class="badge badge-good badge-dot">Paid</span>
+{% elif order.order_status == 'Pending' %}<span class="badge badge-warn badge-dot">Awaiting payment</span>
+{% elif order.order_status == 'Shipped' %}<span class="badge badge-dot">Shipped</span>
+{% elif order.order_status == 'Delivered' %}<span class="badge badge-good badge-dot">Delivered</span>
+{% elif order.order_status == 'Cancelled' %}<span class="badge badge-bad badge-dot">Cancelled</span>
+{% else %}<span class="badge">{{ order.order_status }}</span>{% endif %}

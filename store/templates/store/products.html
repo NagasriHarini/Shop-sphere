@@ -1,0 +1,51 @@
+{% extends 'store/base.html' %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="eyebrow">{% if gender %}{{ gender }}{% else %}All products{% endif %}{% if category %} · {{ category }}{% endif %}</div>
+    <h1>{% if q %}Results for “{{ q }}”{% else %}Discover your next favourite{% endif %}</h1>
+    <p>{{ total }} product{{ total|pluralize }}</p>
+  </div>
+</div>
+
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+
+<form class="filters" method="get">
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input type="search" name="q" value="{{ q }}" placeholder="Search shoes, tops, brands, colours…" aria-label="Search">
+  </div>
+  <select name="gender" aria-label="For">
+    <option value="">Everyone</option>
+    {% for g in genders %}<option value="{{ g }}" {% if g == gender %}selected{% endif %}>{{ g }}</option>{% endfor %}
+  </select>
+  <select name="category" aria-label="Category">
+    <option value="">All categories</option>
+    {% for c in categories %}<option value="{{ c }}" {% if c == category %}selected{% endif %}>{{ c }}</option>{% endfor %}
+  </select>
+  <select name="sort" aria-label="Sort">
+    <option value="">Featured</option>
+    <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: low to high</option>
+    <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: high to low</option>
+    <option value="name" {% if sort == 'name' %}selected{% endif %}>Name A–Z</option>
+  </select>
+  <button type="submit" class="btn-primary">Apply</button>
+  {% if q or gender or category or sort %}<a href="/products/" class="btn btn-ghost">Clear</a>{% endif %}
+</form>
+
+{% if products %}
+  <div class="products">
+    {% for p in products %}{% include 'store/_product_card.html' with p=p %}{% endfor %}
+  </div>
+
+  {% include 'store/_pagination.html' %}
+{% else %}
+  <div class="card empty">
+    <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+    <h2>Nothing matches that</h2>
+    <p class="muted">Try another word or clear the filters.</p>
+    <a href="/products/" class="btn btn-primary">See all products</a>
+  </div>
+{% endif %}
+{% endblock %}

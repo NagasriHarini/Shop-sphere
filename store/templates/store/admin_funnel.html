@@ -1,0 +1,16 @@
+{% extends 'store/base.html' %}
+{% block title %}Funnel table{% endblock %}
+{% block content %}
+{% include 'store/_admin_nav.html' %}
+<div class="page-head"><div><div class="eyebrow">All time</div><h1>Purchase funnel</h1><p>Unique customers at each stage and the share kept from the stage before.</p></div>
+<a href="/adminpanel/analytics/" class="btn btn-soft">Charts &amp; date range →</a></div>
+<p class="note muted" style="font-size:.88rem;margin:-6px 0 14px">Cumulative funnel: a customer who reached a later stage also counts in every earlier one (you can’t pay without viewing and carting). Reviews are counted separately.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Stage</th><th class="num">Customers</th><th style="width:40%"></th><th class="num">From previous</th></tr></thead>
+  <tbody>{% for row in rows %}
+    <tr><td><b>{{ row.stage }}</b></td><td class="num">{{ row.count }}</td>
+      <td><div style="height:10px;border-radius:0 6px 6px 0;background:var(--grad);width:{{ row.width }}%;max-width:100%"></div></td>
+      <td class="num">{% if row.rate is not None %}{{ row.rate }}%{% else %}&mdash;{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="4" class="muted">No funnel data yet.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

@@ -1,0 +1,23 @@
+Output of database/tests/validation_tests.sql (all changes rolled back afterwards)
+
+test_no  test                                                                         result detail
+      1  T01 CHECK: review rating must be 1-5                                         PASS   rejected: CONSTRAINT `chk_review_rating` failed for `shopping_funnel`.`reviews`
+      2  T02 CHECK: cart quantity must be > 0                                         PASS   rejected: CONSTRAINT `chk_cart_quantity` failed for `shopping_funnel`.`cart`
+      3  T03 CHECK: product price cannot be negative                                  PASS   rejected: CONSTRAINT `chk_products_price` failed for `shopping_funnel`.`products`
+      4  T04 CHECK: order status must be a known value                                PASS   rejected: CONSTRAINT `chk_orders_status` failed for `shopping_funnel`.`orders`
+      5  T05 CHECK: funnel stage must be a known value                                PASS   rejected: CONSTRAINT `chk_funnel_stage` failed for `shopping_funnel`.`funnel_events`
+      6  T06 UNIQUE: two customers cannot share an email                              PASS   rejected: Duplicate entry 'sai.pillai1@demo.shop' for key 'email'
+      7  T07 NOT NULL: customer email is required                                     PASS   rejected: Column 'email' cannot be null
+      8  T08 FOREIGN KEY: order for a customer that does not exist                    PASS   rejected: Cannot add or update a child row: a foreign key constraint fails (`shopping_funn
+      9  T09 CHECK: order item subtotal must equal quantity x price                   PASS   rejected: CONSTRAINT `chk_items_subtotal` failed for `shopping_funnel`.`order_items`
+     10  T10 TRIGGER: order line larger than the stock is refused (SIGNAL 45000)      PASS   rejected: Not enough stock for "Nike Men Air Zoom Century Shoes": only 60 left
+     11  T11 TRIGGER: placing an order line reduces stock by its quantity             PASS   (SELECT stock_quantity FROM products WHERE product_id = 1636) = 58
+     12  T12 TRIGGER: a completed payment writes a PAYMENT funnel event               PASS   (SELECT COUNT(*) FROM funnel_events WHERE event_stage = 'PAYMENT' AND order_id = 91) = 1
+     13  T13 TRIGGER: a review writes a REVIEW funnel event                           PASS   (SELECT COUNT(*) FROM funnel_events WHERE event_stage = 'REVIEW' AND customer_id = 1) = 1
+     14  T14 RESTRICT: a product with order history cannot be deleted                 PASS   rejected: Cannot delete or update a parent row: a foreign key constraint fails (`shopping_
+     15  T15 CASCADE: deleting an order deletes its items and payments                PASS   (SELECT COUNT(*) FROM order_items WHERE order_id = 91) + (SELECT COUNT(*) FROM payments WH
+     16  T16 SET NULL: removing a cart row keeps its history (cart_id becomes NULL)   PASS   (SELECT cart_id IS NULL FROM cart_events WHERE event_id = 284)
+
+ passed   failed   total
+
+     16        0      16

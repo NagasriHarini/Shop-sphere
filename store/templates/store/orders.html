@@ -1,0 +1,37 @@
+{% extends 'store/base.html' %}
+{% load tz %}
+{% block title %}My orders{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">Account</div><h1>My orders</h1><p>{{ orders|length }} order{{ orders|length|pluralize }}</p></div>
+<a href="/products/" class="btn btn-soft btn-sm">Continue shopping</a></div>
+
+{% for order in orders %}
+<article class="card order reveal" style="margin-bottom:16px">
+  <div class="order-head">
+    <div><div class="k">Order</div><div class="v">#{{ order.order_id }}</div></div>
+    <div><div class="k">Placed</div><div class="v">{{ order.order_date|localtime|date:"d M Y" }}</div></div>
+    <div><div class="k">Total</div><div class="v">₹{{ order.total_amount|floatformat:"2g" }}</div></div>
+    <div>{% include 'store/_order_status.html' %}</div>
+    <span class="spacer"></span>
+    {% if order.order_status == 'Pending' %}<a href="{% url 'payment_page' order.order_id %}" class="btn btn-warm btn-sm">Pay now</a>{% endif %}
+    <a href="{% url 'order_detail' order.order_id %}" class="btn btn-sm">Details</a>
+  </div>
+  <div class="order-items">
+    {% for item in order.items_list %}
+      <div class="order-line">
+        <img src="{% url 'product_image' item.product.product_id %}" alt="">
+        <div style="flex:1"><a href="{% url 'product_detail' item.product.product_id %}" style="color:var(--ink);font-weight:650">{{ item.product.product_title }}</a>
+          <div class="muted" style="font-size:.86rem">Qty {{ item.quantity }} × ₹{{ item.unit_price|floatformat:"0g" }}</div></div>
+        <b>₹{{ item.subtotal|floatformat:"0g" }}</b>
+      </div>
+    {% endfor %}
+  </div>
+</article>
+{% empty %}
+<div class="card empty">
+  <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg></div>
+  <h2>No orders yet</h2><p class="muted">When you place an order it will appear here.</p>
+  <a href="/products/" class="btn btn-primary">Start shopping</a>
+</div>
+{% endfor %}
+{% endblock %}

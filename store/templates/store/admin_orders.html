@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+{% load tz %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+{% include 'store/_admin_nav.html' %}
+<div class="page-head"><div><div class="eyebrow">Sales</div><h1>Orders</h1><p>{{ total }} order{{ total|pluralize }}</p></div>
+  <div class="row"><a href="/adminpanel/orders/" class="chip {% if not status %}on{% endif %}">All</a>
+  {% for s in statuses %}<a href="?status={{ s }}" class="chip {% if s == status %}on{% endif %}">{{ s }}</a>{% endfor %}</div></div>
+{% for order in orders %}
+<article class="card order" style="margin-bottom:14px">
+  <div class="order-head">
+    <div><div class="k">Order</div><div class="v">#{{ order.order_id }}</div></div>
+    <div><div class="k">Customer</div><div class="v">{{ order.customer.first_name }} {{ order.customer.last_name }}</div></div>
+    <div><div class="k">Placed</div><div class="v">{{ order.order_date|localtime|date:"d M Y, H:i" }}</div></div>
+    <div><div class="k">Total</div><div class="v">₹{{ order.total_amount|floatformat:"2g" }}</div></div>
+    <span class="spacer"></span>{% include 'store/_order_status.html' %}
+    {% if order.order_status != 'Delivered' and order.order_status != 'Cancelled' %}
+    <form method="POST" action="{% url 'admin_update_order_status' order.order_id %}" class="row" style="gap:6px"{% if order.order_status != 'Shipped' %} data-confirm="Change the status of order #{{ order.order_id }}?"{% endif %}>
+      {% csrf_token %}<input type="hidden" name="back" value="{{ request.get_full_path }}">
+      {% if order.order_status == 'Paid' %}<button type="submit" name="status" value="Shipped" class="btn-soft btn-sm">Mark shipped</button>{% endif %}
+      {% if order.order_status == 'Shipped' %}<button type="submit" name="status" value="Delivered" class="btn-soft btn-sm">Mark delivered</button>{% endif %}
+      {% if order.order_status == 'Pending' or order.order_status == 'Paid' %}<button type="submit" name="status" value="Cancelled" class="btn-danger btn-sm">Cancel</button>{% endif %}
+    </form>
+    {% endif %}
+  </div>
+  <div class="order-items">{% for item in order.items_list %}
+    <div class="order-line"><img src="{% url 'product_image' item.product.product_id %}" alt="" loading="lazy">
+      <div style="flex:1;font-weight:650;font-size:.92rem">{{ item.product.product_title }}<div class="muted" style="font-weight:500;font-size:.84rem">Qty {{ item.quantity }} × ₹{{ item.unit_price|floatformat:"0g" }}</div></div>
+      <b>₹{{ item.subtotal|floatformat:"0g" }}</b></div>{% endfor %}
+    <div class="muted" style="font-size:.85rem;padding:8px 0 12px">Ship to: {{ order.shipping_addr }}</div>
+  </div>
+</article>
+{% empty %}<div class="card empty"><h2>No orders</h2><p class="muted">Nothing matches this filter.</p></div>{% endfor %}
+{% include 'store/_pagination.html' %}
+{% endblock %}

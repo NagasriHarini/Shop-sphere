@@ -1,0 +1,118 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}ShopSphere{% endblock %} · ShopSphere</title>
+    <script>
+      /* apply saved theme before paint (no flash) */
+      document.documentElement.classList.add('js');
+      try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%235b4cf0'/%3E%3Cpath d='M9 11h14l-1.2 13H10.2z M13 11a3 3 0 0 1 6 0' fill='none' stroke='white' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="{% static 'store/css/site.css' %}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="/" class="brand" aria-label="ShopSphere home">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      </span>
+      ShopSphere
+    </a>
+
+    <nav class="nav-links" aria-label="Main">
+      <a href="/products/" class="{% if request.path == '/products/' and not request.GET.gender %}active{% endif %}">Shop all</a>
+      <a href="/products/?gender=Men" class="{% if request.GET.gender == 'Men' %}active{% endif %}">Men</a>
+      <a href="/products/?gender=Women" class="{% if request.GET.gender == 'Women' %}active{% endif %}">Women</a>
+      <a href="/products/?gender=Boys" class="{% if request.GET.gender == 'Boys' %}active{% endif %}">Boys</a>
+      <a href="/products/?gender=Girls" class="{% if request.GET.gender == 'Girls' %}active{% endif %}">Girls</a>
+      {% if request.session.seller_id %}<a href="/seller/dashboard/" class="{% if '/seller/' in request.path %}active{% endif %}">Seller hub</a>{% endif %}
+      {% if request.session.admin_id %}<a href="/adminpanel/dashboard/" class="{% if '/adminpanel/' in request.path %}active{% endif %}">Admin</a>{% endif %}
+    </nav>
+
+    <div class="nav-right">
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch light / dark theme" title="Light / dark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+
+      {% if request.session.customer_id %}
+        <a href="/cart/" class="icon-btn cart-pill" aria-label="My cart" title="My cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2.6l2.4 12.2a1.6 1.6 0 0 0 1.6 1.3h8.7a1.6 1.6 0 0 0 1.6-1.2L21 8H6.1"/></svg>
+        </a>
+      {% endif %}
+
+      <div class="dropdown" data-dropdown>
+        <button class="nav-btn" type="button" aria-haspopup="true">
+          {% if request.session.customer_name %}Hi, {{ request.session.customer_name }}
+          {% elif request.session.seller_name %}{{ request.session.seller_name }}
+          {% elif request.session.admin_name %}{{ request.session.admin_name }}
+          {% else %}Sign in{% endif %}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="dropdown-menu">
+          {% if request.session.customer_id %}
+            <div class="label">My account</div>
+            <a href="/profile/">Profile</a>
+            <a href="/orders/">My orders</a>
+            <a href="/cart/">My cart</a>
+            <a href="/logout/">Log out</a>
+          {% else %}
+            <div class="label">Customers</div>
+            <a href="/login/">Customer login</a>
+            <a href="/register/">Create account</a>
+          {% endif %}
+          <div class="label">Partners</div>
+          {% if request.session.seller_id %}
+            <a href="/seller/dashboard/">Seller hub</a>
+            <a href="/seller/logout/">Seller log out</a>
+          {% else %}
+            <a href="/seller/login/">Seller login</a>
+          {% endif %}
+          {% if request.session.admin_id %}
+            <a href="/adminpanel/dashboard/">Admin dashboard</a>
+            <a href="/adminpanel/logout/">Admin log out</a>
+          {% else %}
+            <a href="/adminpanel/login/">Admin login</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+{% if messages %}
+<div class="flash-stack" role="status">
+  {% for m in messages %}
+    <div class="alert alert-{% if m.tags %}{{ m.tags }}{% else %}info{% endif %}">{{ m }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main class="page">
+  <div class="wrap">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; {% now "Y" %} ShopSphere — a DBMS shopping-funnel project</span>
+    <span>Django · MySQL 8 · triggers, views &amp; stored procedures</span>
+  </div>
+</footer>
+
+<script src="{% static 'store/js/site.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,15 @@
+<a class="p-card reveal" data-tilt="9" href="{% url 'product_detail' p.product_id %}">
+  <div class="p-media">
+    <img src="{% url 'product_image' p.product_id %}" alt="{{ p.product_title }}" loading="lazy">
+    {% if p.stock_quantity == 0 %}<span class="badge badge-bad">Sold out</span>
+    {% elif p.stock_quantity and p.stock_quantity < 10 %}<span class="badge">Only {{ p.stock_quantity }} left</span>{% endif %}
+  </div>
+  <div class="p-body">
+    <span class="p-brand">{{ p.brand }}</span>
+    <span class="p-title">{{ p.product_title }}</span>
+    <div class="p-foot">
+      <span class="price">₹{{ p.price|floatformat:"0g" }}</span>
+      <span class="p-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </div>
+  </div>
+</a>

@@ -1,0 +1,5 @@
+<nav class="role-switch" aria-label="Sign in as">
+  <a href="/login/" class="{% if role == 'customer' %}on{% endif %}">Customer</a>
+  <a href="/seller/login/" class="{% if role == 'seller' %}on{% endif %}">Seller</a>
+  <a href="/adminpanel/login/" class="{% if role == 'admin' %}on{% endif %}">Admin</a>
+</nav>

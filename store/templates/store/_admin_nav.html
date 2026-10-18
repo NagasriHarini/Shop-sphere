@@ -1,0 +1,9 @@
+<nav class="admin-nav" aria-label="Admin">
+  <a href="/adminpanel/dashboard/" class="{% if request.path == '/adminpanel/dashboard/' %}on{% endif %}">Overview</a>
+  <a href="/adminpanel/analytics/" class="{% if '/analytics/' in request.path %}on{% endif %}">Analytics</a>
+  <a href="/adminpanel/orders/" class="{% if '/orders/' in request.path %}on{% endif %}">Orders</a>
+  <a href="/adminpanel/products/" class="{% if '/product' in request.path and '/funnel/' not in request.path %}on{% endif %}">Products</a>
+  <a href="/adminpanel/customers/" class="{% if '/customers/' in request.path %}on{% endif %}">Customers</a>
+  <a href="/adminpanel/sellers/" class="{% if '/sellers/' in request.path %}on{% endif %}">Sellers</a>
+  <a href="/adminpanel/funnel/" class="{% if request.path == '/adminpanel/funnel/' or '/funnel/product/' in request.path %}on{% endif %}">Funnel table</a>
+</nav>

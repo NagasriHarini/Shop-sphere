@@ -1,0 +1,58 @@
+{% extends 'store/base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">New season · {{ product_count }} styles</div>
+      <h1>Style that moves <span class="gradient-text">with you.</span></h1>
+      <p class="lead">Footwear and apparel for men, women and kids, from {{ brand_count }} brands and {{ seller_count }} trusted sellers. Every click is tracked through our database to understand the shopping funnel.</p>
+      <div class="row">
+        <a href="/products/" class="btn btn-primary btn-lg">Start shopping
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        {% if not request.session.customer_id %}<a href="/register/" class="btn btn-ghost btn-lg">Create account</a>{% endif %}
+      </div>
+      <div class="hero-stats">
+        <div><b>{{ product_count }}</b><span>products</span></div>
+        <div><b>{{ brand_count }}</b><span>brands</span></div>
+        <div><b>{{ seller_count }}</b><span>sellers</span></div>
+      </div>
+    </div>
+
+    <div class="stage" aria-label="Featured products carousel">
+      <span class="orb orb-1"></span><span class="orb orb-2"></span><span class="orb orb-3"></span>
+      <div class="ring">
+        {% for p in featured %}
+        <a class="face" style="--i: {{ forloop.counter0 }}" href="{% url 'product_detail' p.product_id %}">
+          <img src="{% url 'product_image' p.product_id %}" alt="{{ p.product_title }}" loading="lazy">
+          <div class="cap"><b>₹{{ p.price|floatformat:"0g" }}</b>{{ p.brand }}</div>
+        </a>
+        {% endfor %}
+      </div>
+      <div class="floor"></div>
+    </div>
+  </div>
+</section>
+
+<div class="feature-strip">
+  <div class="feature reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></div><div><b>Fast delivery</b><span>2–7 days across India</span></div></div>
+  <div class="feature reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="m9 12 2 2 4-4"/></svg></div><div><b>Secure checkout</b><span>One atomic transaction</span></div></div>
+  <div class="feature reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></div><div><b>Live stock</b><span>Checked by DB triggers</span></div></div>
+  <div class="feature reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div><div><b>Real reviews</b><span>From verified shoppers</span></div></div>
+</div>
+
+<div class="page-head"><div><div class="eyebrow">Browse</div><h2>Shop by category</h2></div></div>
+<div class="cat-tiles">
+  <a class="cat-tile t1 reveal" href="/products/?gender=Men"><small>Footwear</small><span>Men</span></a>
+  <a class="cat-tile t2 reveal" href="/products/?gender=Women"><small>Footwear</small><span>Women</span></a>
+  <a class="cat-tile t3 reveal" href="/products/?gender=Boys"><small>Apparel</small><span>Boys</span></a>
+  <a class="cat-tile t4 reveal" href="/products/?gender=Girls"><small>Apparel</small><span>Girls</span></a>
+</div>
+
+<div class="page-head" style="margin-top:44px"><div><div class="eyebrow">Picked for you</div><h2>Trending now</h2></div><a href="/products/" class="btn btn-soft btn-sm">View all</a></div>
+<div class="products">
+  {% for p in featured|slice:":8" %}{% include 'store/_product_card.html' with p=p %}{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'store/base.html' %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<div class="auth">
+  <div class="auth-card wide" data-tilt="3">
+    {% include 'store/_brand_mark.html' %}
+    <h1>Create your account</h1>
+    <p class="muted">It takes less than a minute.</p>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <form method="POST" id="registerForm">
+      {% csrf_token %}
+      {% firstof request.GET.next request.POST.next "" as nxt %}<input type="hidden" name="next" value="{{ nxt }}">
+      <div class="field-row">
+        <div class="field"><label for="first_name">First name</label><input id="first_name" type="text" name="first_name" value="{{ request.POST.first_name }}" required></div>
+        <div class="field"><label for="last_name">Last name</label><input id="last_name" type="text" name="last_name" value="{{ request.POST.last_name }}" required></div>
+      </div>
+      <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" value="{{ request.POST.email }}" placeholder="you@example.com" autocomplete="email" required></div>
+      <div class="field-row">
+        <div class="field"><label for="password">Password</label>
+          <div class="input-wrap"><input id="password" type="password" name="password" minlength="8" autocomplete="new-password" required data-strength="#strength">
+            <button type="button" class="toggle" data-toggle-password="password">Show</button></div>
+          <div class="strength" id="strength"><i></i></div><div class="hint" id="strength-text"></div></div>
+        <div class="field"><label for="confirm_password">Confirm password</label>
+          <div class="input-wrap"><input id="confirm_password" type="password" name="confirm_password" minlength="8" autocomplete="new-password" required>
+            <button type="button" class="toggle" data-toggle-password="confirm_password">Show</button></div>
+          <div class="hint" id="matchHint"></div></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="phone">Phone</label><input id="phone" type="tel" name="phone" value="{{ request.POST.phone }}"></div>
+        <div class="field"><label for="gender">Gender</label>
+          <select id="gender" name="gender"><option value="">Prefer not to say</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="city">City</label><input id="city" type="text" name="city" value="{{ request.POST.city }}"></div>
+        <div class="field"><label for="state">State</label><input id="state" type="text" name="state" value="{{ request.POST.state }}"></div>
+      </div>
+      <button type="submit" class="btn-primary btn-lg btn-block">Create account</button>
+    </form>
+    <p class="foot">Already have an account? <a href="/login/{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Log in</a></p>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  const pw = document.getElementById('password'), cf = document.getElementById('confirm_password'), hint = document.getElementById('matchHint');
+  function check() { hint.textContent = cf.value && pw.value !== cf.value ? 'Passwords don’t match yet' : ''; }
+  pw.addEventListener('input', check); cf.addEventListener('input', check);
+  document.getElementById('registerForm').addEventListener('submit', e => { if (pw.value !== cf.value) { e.preventDefault(); check(); cf.focus(); } });
+</script>
+{% endblock %}

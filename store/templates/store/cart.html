@@ -1,0 +1,47 @@
+{% extends 'store/base.html' %}
+{% block title %}My cart{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="eyebrow">Step 1 of 3</div><h1>Your cart</h1></div><a href="/products/" class="btn btn-ghost btn-sm">← Keep shopping</a></div>
+
+{% if cart_items %}
+<div class="split">
+  <div>
+    {% for item in cart_items %}
+    <div class="cart-item">
+      <a href="{% url 'product_detail' item.product.product_id %}"><img src="{% url 'product_image' item.product.product_id %}" alt="{{ item.product.product_title }}"></a>
+      <div>
+        <div class="p-brand">{{ item.product.brand }}</div>
+        <a href="{% url 'product_detail' item.product.product_id %}" style="color:var(--ink);font-weight:700">{{ item.product.product_title }}</a>
+        <div class="muted" style="font-size:.88rem">₹{{ item.product.price|floatformat:"0g" }} each</div>
+        <div class="row" style="margin-top:10px">
+          <div class="qty">
+            <a href="{% url 'decrease_cart' item.cart_id %}" aria-label="One less">−</a>
+            <span>{{ item.quantity }}</span>
+            <a href="{% url 'increase_cart' item.cart_id %}" aria-label="One more">+</a>
+          </div>
+          <a href="{% url 'remove_from_cart' item.cart_id %}" class="btn btn-danger btn-sm">Remove</a>
+        </div>
+      </div>
+      <div class="end price">₹{{ item.line_total|floatformat:"0g" }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <aside class="card summary">
+    <h2>Order summary</h2>
+    <div class="line"><span>Items</span><span>{{ cart_items|length }}</span></div>
+    <div class="line"><span>Subtotal</span><span>₹{{ total|floatformat:"2g" }}</span></div>
+    <div class="line"><span>Delivery</span><span class="badge badge-good">Free</span></div>
+    <div class="line total"><span>Total</span><span>₹{{ total|floatformat:"2g" }}</span></div>
+    <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg btn-block" style="margin-top:14px">Checkout</a>
+  </aside>
+</div>
+{% else %}
+<div class="card empty">
+  <div class="art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2.6l2.4 12.2a1.6 1.6 0 0 0 1.6 1.3h8.7a1.6 1.6 0 0 0 1.6-1.2L21 8H6.1"/></svg></div>
+  <h2>Your cart is empty</h2>
+  <p class="muted">Find something you love and it will show up here.</p>
+  <a href="/products/" class="btn btn-primary">Browse products</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,6 @@
+config/local_settings.py
+__pycache__/
+*.pyc
+db.sqlite3
+*.tar
+.vscode/

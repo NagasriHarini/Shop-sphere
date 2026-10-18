@@ -1,0 +1,18 @@
+{% extends 'store/base.html' %}
+{% block title %}Product funnel{% endblock %}
+{% block content %}
+{% include 'store/_admin_nav.html' %}
+{% if product %}
+<div class="page-head"><div class="row" style="gap:16px"><img class="thumb" style="width:76px;height:76px" src="{% url 'product_image' product.product_id %}" alt="">
+  <div><div class="eyebrow">Product funnel · #{{ product.product_id }}</div><h1 style="margin:0">{{ product.product_title }}</h1><p>{{ product.brand }} · ₹{{ product.price|floatformat:"0g" }} · {{ product.stock_quantity }} in stock</p></div></div>
+  <a href="{% url 'product_detail' product.product_id %}" class="btn btn-soft">View in shop</a></div>
+{% else %}<div class="alert alert-warning">Product not found.</div>{% endif %}
+<p class="note muted" style="font-size:.88rem;margin:-6px 0 14px">Cumulative funnel: a customer who reached a later stage also counts in every earlier one (you can’t pay without viewing and carting). Reviews are counted separately.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Stage</th><th class="num">Customers</th><th style="width:40%"></th><th class="num">From previous</th></tr></thead>
+  <tbody>{% for row in rows %}
+    <tr><td><b>{{ row.stage }}</b></td><td class="num">{{ row.count }}</td>
+      <td><div style="height:10px;border-radius:0 6px 6px 0;background:var(--grad);width:{{ row.width }}%;max-width:100%"></div></td>
+      <td class="num">{% if row.rate is not None %}{{ row.rate }}%{% else %}&mdash;{% endif %}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

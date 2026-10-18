@@ -1,0 +1,464 @@
+Sample output of database/queries/complex_queries.sql
+Run on the demo database (python manage.py generate_funnel_data). Long results are cut to 15 rows.
+
+==============================================================================
+Q1. Full order report (5-table join)
+==============================================================================
++----------+---------------------+----------------+--------------------------------------------------------+--------------------+----------+------------+----------+--------------+----------------+----------------+
+| order_id | order_date          | customer       | product_title                                          | seller_name        | quantity | unit_price | subtotal | order_status | payment_method | payment_status |
++----------+---------------------+----------------+--------------------------------------------------------+--------------------+----------+------------+----------+--------------+----------------+----------------+
+|       95 | 2026-10-15 13:02:36 | Test Customer  | Nike Men Air Zoom Century Shoes                        | Royal Outfitters   |        1 |    3701.00 |  3701.00 | Paid         | UPI            | Completed      |
+|       94 | 2026-10-15 13:01:39 | Test Customer  | Nike Men Air Zoom Century Shoes                        | Royal Outfitters   |        1 |    3701.00 |  3701.00 | Paid         | UPI            | Completed      |
+|       93 | 2026-10-15 12:58:56 | Test Customer  | Nike Men Air Zoom Century Shoes                        | Royal Outfitters   |        1 |    3701.00 |  3701.00 | Paid         | UPI            | Completed      |
+|       92 | 2026-10-15 12:57:44 | Test Customer  | Nike Men Air Zoom Century Shoes                        | Royal Outfitters   |        1 |    3701.00 |  3701.00 | Paid         | UPI            | Completed      |
+|       85 | 2026-10-14 12:33:25 | Test Customer  | Reebok Women Reeflex Run Blue Sports Shoes             | Fashion Galaxy     |        1 |    1834.00 |  1834.00 | Cancelled    | UPI            | Refunded       |
+|       83 | 2026-10-14 12:33:24 | Test Customer  | Reebok Women Reeflex Run Blue Sports Shoes             | Fashion Galaxy     |        1 |    1834.00 |  1834.00 | Cancelled    | NULL           | NULL           |
+|       84 | 2026-10-14 12:33:24 | Test Customer  | Reebok Women Reeflex Run Blue Sports Shoes             | Fashion Galaxy     |        1 |    1834.00 |  1834.00 | Delivered    | UPI            | Completed      |
+|       82 | 2026-10-14 08:46:58 | Test Customer  | Reebok Women Reeflex Run Blue Sports Shoes             | Fashion Galaxy     |        1 |    1834.00 |  1834.00 | Paid         | UPI            | Completed      |
+|       82 | 2026-10-14 08:46:58 | Test Customer  | Reebok Men Premier ultra 8 U-form Silver Sports Shoes  | Fashion Galaxy     |        1 |    4345.00 |  4345.00 | Paid         | UPI            | Completed      |
+|       81 | 2026-10-14 08:45:49 | Test Customer  | Reebok Women Reeflex Run Blue Sports Shoes             | Fashion Galaxy     |        1 |    1834.00 |  1834.00 | Paid         | UPI            | Completed      |
+|       81 | 2026-10-14 08:45:49 | Test Customer  | Reebok Men Premier ultra 8 U-form Silver Sports Shoes  | Fashion Galaxy     |        1 |    4345.00 |  4345.00 | Paid         | UPI            | Completed      |
+|       79 | 2026-10-14 08:43:54 | Test Customer  | Disney Kids Girls Disney girl pink pooh top Kidswear   | Style Avenue       |        2 |    4619.00 |  9238.00 | Paid         | UPI            | Completed      |
+|       79 | 2026-10-14 08:43:54 | Test Customer  | Quechua Men Arpenaz Brown Sandal                       | Infinity Styles    |        1 |    2704.00 |  2704.00 | Paid         | UPI            | Completed      |
+|       80 | 2026-10-14 08:43:54 | Test Customer  | Disney Kids Girls Disney girl pink pooh top Kidswear   | Style Avenue       |        1 |    4619.00 |  4619.00 | Pending      | NULL           | NULL           |
+|       77 | 2026-10-14 08:26:21 | Test Customer  | Quechua Men Arpenaz Brown Sandal                       | Infinity Styles    |        1 |    2704.00 |  2704.00 | Paid         | Simulated      | Completed      |
+   ... (35 more rows)
++----------+---------------------+----------------+--------------------------------------------------------+--------------------+----------+------------+----------+--------------+----------------+----------------+
+
+==============================================================================
+Q2. What is in every customer's cart right now, and its value
+==============================================================================
++-------------+------------------+---------------------------------------------------------+----------+---------+------------+---------------------+
+| customer_id | customer         | product_title                                           | quantity | price   | line_value | added_date          |
++-------------+------------------+---------------------------------------------------------+----------+---------+------------+---------------------+
+|          79 | Krishna Joshi    | United Colors of Benetton Kids Girls Pink Printed Top   |        2 | 4801.00 |    9602.00 | 2026-09-27 21:56:43 |
+|          64 | Nikhil Chowdary  | Inc.5 Women Black Casual Heels                          |        2 | 4234.00 |    8468.00 | 2026-10-04 17:49:33 |
+|          66 | Sai Naidu        | HM Women Purple Flats                                   |        2 | 4169.00 |    8338.00 | 2026-10-11 06:44:43 |
+|          20 | Sai Chowdary     | iPanema Women Black Flip Flops                          |        2 | 3975.00 |    7950.00 | 2026-09-21 03:57:47 |
+|          28 | Ishaan Iyer      | Carlton London Women Gold Wedge Sandal                  |        2 | 3863.00 |    7726.00 | 2026-09-24 06:29:01 |
+|         175 | Swathi Naidu     | Senorita Women Black Heels                              |        2 | 3807.00 |    7614.00 | 2026-09-21 05:40:06 |
+|         179 | Vivaan Joshi     | Gini and Jony Boys Black T-shirt                        |        2 | 3647.00 |    7294.00 | 2026-09-25 19:14:10 |
+|          27 | Aarav Verma      | Catwalk Women Black Heels                               |        2 | 3545.00 |    7090.00 | 2026-09-30 09:59:47 |
+|         188 | Sai Naidu        | Doodle Girls Pink Printed Dress                         |        2 | 3381.00 |    6762.00 | 2026-10-03 12:05:22 |
+|         105 | Karthik Das      | Gini and Jony Boys Check Blue Shirt                     |        2 | 3258.00 |    6516.00 | 2026-09-23 21:48:51 |
+|         128 | Krishna Pillai   | Fila Women Princess Black Casual Shoes                  |        2 | 3093.00 |    6186.00 | 2026-10-02 16:41:46 |
+|         157 | Lakshmi Krishnan | Catwalk Women Black Heels                               |        2 | 3016.00 |    6032.00 | 2026-09-21 23:44:41 |
+|          10 | Meera Das        | Gini and Jony Boys Customised White Shirt               |        2 | 2621.00 |    5242.00 | 2026-09-30 16:11:58 |
+|          20 | Sai Chowdary     | Nike Women Double Team Lite Black Shoes                 |        2 | 2539.00 |    5078.00 | 2026-09-17 00:19:09 |
+|          27 | Aarav Verma      | Timberland Men Brown Casual Shoes                       |        1 | 4912.00 |    4912.00 | 2026-09-30 10:03:49 |
+   ... (107 more rows)
++-------------+------------------+---------------------------------------------------------+----------+---------+------------+---------------------+
+
+==============================================================================
+Q3. One customer's session-by-session browsing history
+==============================================================================
++------------+-------------+---------------------+---------------------+-----------------------------+---------------------+
+| session_id | device_type | start_time          | end_time            | product_title               | view_timestamp      |
++------------+-------------+---------------------+---------------------+-----------------------------+---------------------+
+|          1 | Mobile      | 2026-09-25 11:48:57 | 2026-09-25 12:04:19 | RCB Boys Fangear Tee        | 2026-09-25 11:52:26 |
+|          1 | Mobile      | 2026-09-25 11:48:57 | 2026-09-25 12:04:19 | Nike Kids Boys Blue T-shirt | 2026-09-25 11:54:24 |
++------------+-------------+---------------------+---------------------+-----------------------------+---------------------+
+
+==============================================================================
+Q4. Products that were never viewed (anti-join with LEFT JOIN ... IS NULL)
+==============================================================================
++------------+-----------------------------------------------------+----------+-------------------+---------+
+| product_id | product_title                                       | category | brand             | price   |
++------------+-----------------------------------------------------+----------+-------------------+---------+
+|      36317 | Mr.Men Boys Blazing Yellow T-shirt                  | Apparel  | #NAME?            |  827.00 |
+|      15044 | ADIDAS Kids Boys Printed Yellow Tshirts             | Apparel  | Adidas            | 2332.00 |
+|      15045 | ADIDAS Kids Boys Printed Black Tshirts              | Apparel  | Adidas            | 1560.00 |
+|      38922 | Allen Solly Kids Girls Polka Green T-shirt          | Apparel  | Allen Solly       | 4446.00 |
+|      34693 | Allen Solly Kids Girls Poplin Pink Shorts           | Apparel  | Allen Solly       | 4014.00 |
+|      34710 | Allen Solly Kids Girls Polka Green T-shirt          | Apparel  | Allen Solly       |  723.00 |
+|      34721 | Allen Solly Kids Girls Twill Black Trousers         | Apparel  | Allen Solly       | 2094.00 |
+|      38868 | Allen Solly Kids Girls Mock Layered Grey Top        | Apparel  | Allen Solly       | 2759.00 |
+|      38900 | Allen Solly Kids Girls Poplin Yellow Capris         | Apparel  | Allen Solly       | 3343.00 |
+|      38905 | Allen Solly Kids Girls Poplin Pink Shorts           | Apparel  | Allen Solly       | 1247.00 |
+|      38907 | Allen Solly Kids Girls Printed Red T-shirt          | Apparel  | Allen Solly       | 1902.00 |
+|      48250 | The Amazing Spiderman Boys Red T-Shirt              | Apparel  | Amazing Spiderman | 1521.00 |
+|      48252 | The Amazing Spiderman Boys Yellow T-shirt           | Apparel  | Amazing Spiderman | 4826.00 |
+|      48253 | The Amazing Spiderman Boys White T-shirt            | Apparel  | Amazing Spiderman | 3490.00 |
+|      48256 | The Amazing Spiderman Boys Navy Blue T-shirt        | Apparel  | Amazing Spiderman | 2932.00 |
+   ... (35 more rows)
++------------+-----------------------------------------------------+----------+-------------------+---------+
+
+==============================================================================
+Q5. Revenue, units and orders per seller (paid orders only)
+==============================================================================
++-----------+----------------------+-------------+------------+-----------+-------------------+
+| seller_id | seller_name          | paid_orders | units_sold | revenue   | avg_selling_price |
++-----------+----------------------+-------------+------------+-----------+-------------------+
+|         7 | Classic Trends       |          27 |         38 | 103439.00 |           2759.97 |
+|         5 | Style Avenue         |          12 |         21 |  71226.00 |           3326.23 |
+|        10 | Royal Outfitters     |          14 |         19 |  45898.00 |           2499.93 |
+|        11 | Infinity Styles      |           9 |         12 |  43916.00 |           3644.33 |
+|         3 | Elite Apparel        |          13 |         18 |  41476.00 |           2350.64 |
+|        12 | Fashion Galaxy       |          10 |         14 |  33215.00 |           2387.38 |
+|         1 | TrendStyle Fashion   |           8 |         12 |  23951.00 |           2077.11 |
+|         8 | NextGen Fashion      |           7 |          8 |  23785.00 |           2718.86 |
+|         6 | Vogue Closet         |           6 |          8 |  20655.00 |           2703.00 |
+|         4 | Fashion Fusion       |           6 |          7 |  17742.00 |           2133.00 |
+|         2 | Urban Wear Hub       |           4 |          6 |  15716.00 |           2414.25 |
+|        14 | Smart Choice Fashion |           4 |          5 |  12384.00 |           2494.00 |
+|         9 | Prime Collection     |           3 |          5 |  10908.00 |           2259.33 |
+|        13 | Metro Clothing       |           2 |          2 |   2961.00 |           1480.50 |
+|        15 | Premium Wardrobe     |           1 |          1 |   2429.00 |           2429.00 |
++-----------+----------------------+-------------+------------+-----------+-------------------+
+
+==============================================================================
+Q6. Catalogue summary per gender and category
+==============================================================================
++--------+----------+----------+-------------+-------------+-------------+----------------+
+| gender | category | products | cheapest    | dearest     | avg_price   | units_in_stock |
++--------+----------+----------+-------------+-------------+-------------+----------------+
+| NULL   | Men      |        1 |  2000000.00 |  2000000.00 |  2000000.00 |              1 |
+| Boys   | Apparel  |      759 |      526.00 |     4997.00 |     2670.12 |          79501 |
+| Girls  | Apparel  |      567 |      500.00 |     4995.00 |     2699.88 |          57461 |
+| Men    | Footwear |      810 |      501.00 |     4998.00 |     2696.38 |          84096 |
+| Men    | Apparel  |        1 | 33333333.00 | 33333333.00 | 33333333.00 |            234 |
+| Women  | Footwear |      768 |      502.00 |     4998.00 |     2713.94 |          81487 |
++--------+----------+----------+-------------+-------------+-------------+----------------+
+
+==============================================================================
+Q7. Best-rated brands with at least 2 reviews
+==============================================================================
++---------------+---------+-------------------+------------+
+| brand         | reviews | products_reviewed | avg_rating |
++---------------+---------+-------------------+------------+
+| Adidas        |       3 |                 3 |       4.67 |
+| Hm            |       3 |                 3 |       4.67 |
+| Puma          |       2 |                 2 |       4.50 |
+| Gini And Jony |       4 |                 4 |       4.00 |
+| Nike          |       2 |                 2 |       4.00 |
+| Timberl And   |       2 |                 2 |       3.50 |
++---------------+---------+-------------------+------------+
+
+==============================================================================
+Q8. Customers who spent more than 5,000 in total
+==============================================================================
++-------------+----------------+------------+--------+-------------+
+| customer_id | customer       | city       | orders | total_spent |
++-------------+----------------+------------+--------+-------------+
+|         201 | Test Customer  | City       |     10 |    48261.00 |
+|          19 | Divya Pillai   | Pune       |      2 |    21079.00 |
+|          54 | Krishna Patel  | Ahmedabad  |      2 |    18924.00 |
+|         190 | Aadhya Verma   | Bengaluru  |      1 |    18254.00 |
+|          15 | Pari Naidu     | Chennai    |      1 |    16872.00 |
+|          61 | Divya Iyer     | Delhi      |      1 |    15825.00 |
+|          62 | Pari Singh     | Mumbai     |      1 |    14554.00 |
+|         154 | Pari Naidu     | Coimbatore |      1 |    14251.00 |
+|          42 | Keerthi Iyer   | Chennai    |      1 |    14161.00 |
+|         194 | Pranav Gupta   | Coimbatore |      1 |    14093.00 |
+|          99 | Ishaan Pillai  | Kolkata    |      1 |    13736.00 |
+|          75 | Nandini Naidu  | Hyderabad  |      1 |    13052.00 |
+|         114 | Meera Nair     | Delhi      |      1 |    12394.00 |
+|          89 | Divya Joshi    | Chennai    |      2 |    12355.00 |
+|         167 | Vihaan Joshi   | Mumbai     |      1 |     9749.00 |
+   ... (19 more rows)
++-------------+----------------+------------+--------+-------------+
+
+==============================================================================
+Q9. Products priced above the average of their own category
+==============================================================================
++------------+-----------------------------------------------------+----------+-------------+
+| product_id | product_title                                       | category | price       |
++------------+-----------------------------------------------------+----------+-------------+
+|       9999 | Test Seller Shirt                                   | Apparel  | 33333333.00 |
+|      36614 | Catwalk Women Multi-Coloured Heels                  | Footwear |     4998.00 |
+|      47191 | Franco Leone Men Black Formal Shoes                 | Footwear |     4998.00 |
+|      12956 | ADIDAS Men Sports Blue Sports Shoes                 | Footwear |     4998.00 |
+|      16995 | Rocia Women Casual Black Sandal                     | Footwear |     4993.00 |
+|      27074 | Catwalk Women Blue Casual Flats                     | Footwear |     4990.00 |
+|      15378 | Fila Men Coloda Grey Sports Shoes                   | Footwear |     4986.00 |
+|      24251 | Numero Uno Men Black Casual Shoes                   | Footwear |     4971.00 |
+|       9036 | Buckaroo Men Flores Black Formal Shoes              | Footwear |     4969.00 |
+|      21030 | Clarks Women Balti Zing Red Heels                   | Footwear |     4967.00 |
+|      32555 | Playboy Men White Shoes                             | Footwear |     4967.00 |
+|       5404 | Kalenji Kiprun 1000 Whi/ Blue 2011                  | Footwear |     4964.00 |
+|       3307 | Asics Men's Gel Phoenix 3 Black Silver Shoe         | Footwear |     4963.00 |
+|      43411 | Puma Women Black Crazy Slide Flats                  | Footwear |     4961.00 |
+|      57935 | Clarks Men Black Leather Closed Sandals             | Footwear |     4960.00 |
+   ... (35 more rows)
++------------+-----------------------------------------------------+----------+-------------+
+
+==============================================================================
+Q10. Customers who added something to the cart but never placed an order
+==============================================================================
++-------------+------------------+-------------------------------+
+| customer_id | customer         | email                         |
++-------------+------------------+-------------------------------+
+|           2 | Aarav Iyer       | aarav.iyer2@demo.shop         |
+|           4 | Pari Verma       | pari.verma4@demo.shop         |
+|          16 | Nikhil Krishnan  | nikhil.krishnan16@demo.shop   |
+|          20 | Sai Chowdary     | sai.chowdary20@demo.shop      |
+|          26 | Lakshmi Das      | lakshmi.das26@demo.shop       |
+|          27 | Aarav Verma      | aarav.verma27@demo.shop       |
+|          28 | Ishaan Iyer      | ishaan.iyer28@demo.shop       |
+|          31 | Lakshmi Nair     | lakshmi.nair31@demo.shop      |
+|          34 | Ananya Naidu     | ananya.naidu34@demo.shop      |
+|          39 | Diya Gupta       | diya.gupta39@demo.shop        |
+|          55 | Sneha Rao        | sneha.rao55@demo.shop         |
+|          60 | Kavya Chowdary   | kavya.chowdary60@demo.shop    |
+|          64 | Nikhil Chowdary  | nikhil.chowdary64@demo.shop   |
+|          66 | Sai Naidu        | sai.naidu66@demo.shop         |
+|          70 | Ananya Iyer      | ananya.iyer70@demo.shop       |
+   ... (29 more rows)
++-------------+------------------+-------------------------------+
+
+==============================================================================
+Q11. Orders whose total is above the average order value
+==============================================================================
++----------+--------------+-----------------+
+| order_id | total_amount | avg_order_value |
++----------+--------------+-----------------+
+|       71 |     18254.00 |         5913.93 |
+|        5 |     16872.00 |         5913.93 |
+|       30 |     15825.00 |         5913.93 |
+|       31 |     14554.00 |         5913.93 |
+|       60 |     14251.00 |         5913.93 |
+|        8 |     14217.00 |         5913.93 |
+|       18 |     14161.00 |         5913.93 |
+|       74 |     14093.00 |         5913.93 |
+|       43 |     13736.00 |         5913.93 |
+|       34 |     13052.00 |         5913.93 |
+|       46 |     12394.00 |         5913.93 |
+|       26 |     12224.00 |         5913.93 |
+|       79 |     11942.00 |         5913.93 |
+|       64 |      9749.00 |         5913.93 |
+|       40 |      9529.00 |         5913.93 |
+   ... (18 more rows)
++----------+--------------+-----------------+
+
+==============================================================================
+Q12. Each customer's number of sessions, views and orders in one row
+==============================================================================
++-------------+-----------------+----------+-------+--------+
+| customer_id | customer        | sessions | views | orders |
++-------------+-----------------+----------+-------+--------+
+|         201 | Test Customer   |       32 |   525 |     12 |
+|          42 | Keerthi Iyer    |        4 |    27 |      1 |
+|          61 | Divya Iyer      |        4 |    26 |      1 |
+|         188 | Sai Naidu       |        4 |    26 |      1 |
+|         181 | Kavya Gupta     |        4 |    25 |      1 |
+|         165 | Vihaan Gupta    |        4 |    24 |      1 |
+|         140 | Divya Chowdary  |        4 |    24 |      0 |
+|         173 | Aditya Krishnan |        4 |    24 |      1 |
+|         148 | Diya Das        |        4 |    23 |      2 |
+|          20 | Sai Chowdary    |        4 |    23 |      0 |
+|          12 | Manoj Gupta     |        3 |    22 |      0 |
+|         200 | Pranav Das      |        4 |    21 |      2 |
+|          56 | Ishaan Nair     |        4 |    21 |      0 |
+|          13 | Ishaan Gupta    |        4 |    21 |      1 |
+|         158 | Rohan Iyer      |        4 |    20 |      1 |
+   ... (10 more rows)
++-------------+-----------------+----------+-------+--------+
+
+==============================================================================
+Q13. Brand with the highest revenue in each category
+==============================================================================
++----------+---------------+----------+
+| category | brand         | revenue  |
++----------+---------------+----------+
+| Apparel  | Gini And Jony | 81969.00 |
+| Footwear | Puma          | 38508.00 |
++----------+---------------+----------+
+
+==============================================================================
+Q14. Paid orders that the customer has not reviewed yet
+==============================================================================
++----------+-------------+------------+
+| order_id | customer_id | product_id |
++----------+-------------+------------+
+|        1 |           3 |      31160 |
+|        2 |          10 |      36957 |
+|        2 |          10 |      50776 |
+|        3 |          13 |      39834 |
+|        3 |          13 |      41857 |
+|        4 |          14 |      32757 |
+|        5 |          15 |      29150 |
+|        5 |          15 |      26598 |
+|        5 |          15 |      33139 |
+|        5 |          15 |      41755 |
+|        5 |          15 |      43577 |
+|        6 |          18 |      30693 |
+|        7 |          19 |       6173 |
+|        8 |          19 |      41012 |
+|        9 |          22 |      13042 |
+   ... (98 more rows)
++----------+-------------+------------+
+
+==============================================================================
+Q15. THE FUNNEL: customers at each stage, conversion and drop-off
+==============================================================================
++----------+-----------+----------------+--------------+-----------------+
+| stage    | customers | conversion_pct | drop_off_pct | pct_of_visitors |
++----------+-----------+----------------+--------------+-----------------+
+| VIEW     |       201 |           NULL |         NULL |           100.0 |
+| CART     |       115 |           57.2 |         42.8 |            57.2 |
+| CHECKOUT |        71 |           61.7 |         38.3 |            35.3 |
+| ORDER    |        71 |          100.0 |          0.0 |            35.3 |
+| PAYMENT  |        64 |           90.1 |          9.9 |            31.8 |
++----------+-----------+----------------+--------------+-----------------+
+
+==============================================================================
+Q16. Top 3 products by revenue inside every category
+==============================================================================
++----------+-----+------------------------------------------------------+----------+
+| category | rnk | product_title                                        | revenue  |
++----------+-----+------------------------------------------------------+----------+
+| Apparel  |   1 | Disney Kids Girls Disney girl pink pooh top Kidswear | 13857.00 |
+| Apparel  |   2 | Doodle Kids Girls Party Frock Pink Dress             |  9520.00 |
+| Apparel  |   3 | Gini and Jony Girls Printed Blue T-shirt             |  8644.00 |
+| Footwear |   1 | Puma Men Faas 300 White Sports Shoes                 | 18860.00 |
+| Footwear |   2 | Nike Men Air Zoom Century Shoes                      | 14804.00 |
+| Footwear |   3 | Coolers Men Black Sandals                            |  9888.00 |
++----------+-----+------------------------------------------------------+----------+
+
+==============================================================================
+Q17. Daily revenue with a running total and a 7-day moving average
+==============================================================================
++------------+----------+---------------+---------------+
+| day        | revenue  | running_total | moving_avg_7d |
++------------+----------+---------------+---------------+
+| 2026-09-15 | 19590.00 |      19590.00 |      19590.00 |
+| 2026-09-16 | 18257.00 |      37847.00 |      18923.50 |
+| 2026-09-17 | 16907.00 |      54754.00 |      18251.33 |
+| 2026-09-18 |  8480.00 |      63234.00 |      15808.50 |
+| 2026-09-19 | 38774.00 |     102008.00 |      20401.60 |
+| 2026-09-20 | 14093.00 |     116101.00 |      19350.17 |
+| 2026-09-21 |  2197.00 |     118298.00 |      16899.71 |
+| 2026-09-22 |  6998.00 |     125296.00 |      15100.86 |
+| 2026-09-23 | 12205.00 |     137501.00 |      14236.29 |
+| 2026-09-24 | 14664.00 |     152165.00 |      13915.86 |
+| 2026-09-25 | 12165.00 |     164330.00 |      14442.29 |
+| 2026-09-26 | 15541.00 |     179871.00 |      11123.29 |
+| 2026-09-27 |  3643.00 |     183514.00 |       9630.43 |
+| 2026-09-28 | 19191.00 |     202705.00 |      12058.14 |
+| 2026-09-29 | 32774.00 |     235479.00 |      15740.43 |
+   ... (13 more rows)
++------------+----------+---------------+---------------+
+
+==============================================================================
+Q18. Time from first product view to first payment, per customer
+==============================================================================
++-------------+---------------------+---------------------+----------------+
+| customer_id | first_view          | first_payment       | minutes_to_buy |
++-------------+---------------------+---------------------+----------------+
+|         201 | 2026-10-14 08:26:21 | 2026-10-14 08:26:21 |              0 |
+|          25 | 2026-09-30 21:00:07 | 2026-09-30 21:08:41 |              8 |
+|          48 | 2026-10-02 09:15:19 | 2026-10-02 09:25:56 |             10 |
+|         191 | 2026-09-26 10:00:35 | 2026-09-26 10:10:57 |             10 |
+|         200 | 2026-10-01 22:19:21 | 2026-10-01 22:30:58 |             11 |
+|          91 | 2026-09-22 02:04:17 | 2026-09-22 02:16:11 |             11 |
+|         132 | 2026-09-22 09:28:31 | 2026-09-22 09:40:51 |             12 |
+|          38 | 2026-09-29 16:25:18 | 2026-09-29 16:39:09 |             13 |
+|         170 | 2026-09-23 15:18:56 | 2026-09-23 15:33:25 |             14 |
+|         171 | 2026-09-18 20:17:03 | 2026-09-18 20:32:58 |             15 |
+|         112 | 2026-09-16 13:27:52 | 2026-09-16 13:43:00 |             15 |
+|          49 | 2026-09-15 17:04:52 | 2026-09-15 17:21:44 |             16 |
+|         156 | 2026-09-15 16:19:16 | 2026-09-15 16:35:54 |             16 |
+|         167 | 2026-09-15 11:41:34 | 2026-09-15 11:59:31 |             17 |
+|           3 | 2026-09-30 20:23:30 | 2026-09-30 20:41:25 |             17 |
+   ... (49 more rows)
++-------------+---------------------+---------------------+----------------+
+
+==============================================================================
+Q19. One activity feed from three tables
+==============================================================================
++----------+-------------+------------+---------------------+
+| activity | customer_id | product_id | at_time             |
++----------+-------------+------------+---------------------+
+| Cart     |         201 |       1636 | 2026-10-15 13:02:32 |
+| View     |         201 |       1636 | 2026-10-15 13:02:31 |
+| Cart     |         201 |       1636 | 2026-10-15 13:01:35 |
+| View     |         201 |       1636 | 2026-10-15 13:01:34 |
+| Cart     |         201 |       1636 | 2026-10-15 12:58:52 |
+| View     |         201 |       1636 | 2026-10-15 12:58:51 |
+| Cart     |         201 |       1636 | 2026-10-15 12:57:41 |
+| View     |         201 |       1636 | 2026-10-15 12:57:39 |
+| View     |         201 |       1636 | 2026-10-14 12:34:14 |
+| View     |         201 |      28600 | 2026-10-14 12:34:14 |
+| View     |         201 |       6628 | 2026-10-14 12:34:14 |
+| View     |         201 |      24260 | 2026-10-14 12:34:14 |
+| View     |         201 |       3567 | 2026-10-14 12:34:14 |
+| View     |         201 |      41869 | 2026-10-14 12:34:14 |
+| View     |         201 |        123 | 2026-10-14 12:34:14 |
+   ... (15 more rows)
++----------+-------------+------------+---------------------+
+
+==============================================================================
+Q20. Customer segments by spend
+==============================================================================
++--------------------+-----------+-----------+
+| segment            | customers | avg_spent |
++--------------------+-----------+-----------+
+| 1. No purchase     |       132 |      0.00 |
+| 2. Low (< 3k)      |        14 |   1908.57 |
+| 3. Medium (3k-10k) |        43 |   5633.19 |
+| 4. High (10k+)     |        14 |  17700.79 |
++--------------------+-----------+-----------+
+
+==============================================================================
+Q21. Overall funnel from the view
+==============================================================================
++----------+-----------+-------------------+---------------+
+| stage    | customers | pct_from_previous | pct_from_view |
++----------+-----------+-------------------+---------------+
+| VIEW     |       201 |              NULL |         100.0 |
+| CART     |       115 |              57.2 |          57.2 |
+| CHECKOUT |        71 |              61.7 |          35.3 |
+| ORDER    |        71 |             100.0 |          35.3 |
+| PAYMENT  |        64 |              90.1 |          31.8 |
+| REVIEW   |        23 |              35.9 |          11.4 |
++----------+-----------+-------------------+---------------+
+
+==============================================================================
+Q22. Device comparison: which device converts carts to orders best?
+==============================================================================
++-------------+----------+--------+---------+-------------------+
+| device_type | sessions | carted | ordered | cart_to_order_pct |
++-------------+----------+--------+---------+-------------------+
+| Tablet      |       38 |     12 |       8 |              66.7 |
+| Desktop     |      172 |     66 |      41 |              62.1 |
+| Mobile      |      204 |     86 |      38 |              44.2 |
++-------------+----------+--------+---------+-------------------+
+
+==============================================================================
+Q23. Funnel for a date range (stored procedure with input parameters)
+==============================================================================
++----------+-----------+-------------------+
+| stage    | customers | pct_from_previous |
++----------+-----------+-------------------+
+| VIEW     |       198 |              NULL |
+| CART     |       115 |              58.1 |
+| CHECKOUT |        71 |              61.7 |
+| ORDER    |        71 |             100.0 |
+| PAYMENT  |        64 |              90.1 |
+| REVIEW   |        23 |              35.9 |
++----------+-----------+-------------------+
+
+==============================================================================
+Q24. Best-selling products (stored procedure) and one customer's journey
+==============================================================================
++------------+-------------------------------------------------------+---------------+------------+----------+------------+
+| product_id | product_title                                         | brand         | units_sold | revenue  | stock_left |
++------------+-------------------------------------------------------+---------------+------------+----------+------------+
+|      26598 | Puma Men Faas 300 White Sports Shoes                  | Puma          |          4 | 18860.00 |         65 |
+|       1636 | Nike Men Air Zoom Century Shoes                       | Nike          |          4 | 14804.00 |         56 |
+|      44521 | Coolers Men Black Sandals                             | Coolers       |          2 |  9888.00 |         38 |
+|       7797 | Puma Men's First Round Takeahike Black Yellow Shoe    | Puma          |          2 |  9610.00 |         81 |
+|      18169 | Doodle Kids Girls Party Frock Pink Dress              | Doodle        |          2 |  9520.00 |         43 |
+|      56876 | HM Women Blue Heels                                   | Hm            |          2 |  9506.00 |        123 |
+|       2699 | Disney Kids Girls Disney girl pink pooh top Kidswear  | Disney        |          2 |  9238.00 |         46 |
+|      10037 | Reebok Men Premier ultra 8 U-form Silver Sports Shoes | Reebok        |          2 |  8690.00 |         81 |
+|      38769 | Gini and Jony Girls Printed Blue T-shirt              | Gini And Jony |          2 |  8644.00 |         29 |
+|      17609 | Doodle Girls Raindrops White Tshirts                  | Doodle        |          2 |  8582.00 |         21 |
++------------+-------------------------------------------------------+---------------+------------+----------+------------+
++---------------------+-------------+------------+-----------------------------+----------+------------+
+| event_timestamp     | event_stage | product_id | product_title               | order_id | session_id |
++---------------------+-------------+------------+-----------------------------+----------+------------+
+| 2026-09-25 11:52:26 | VIEW        |       3332 | RCB Boys Fangear Tee        |     NULL |          1 |
+   ... (1 more rows)
++---------------------+-------------+------------+-----------------------------+----------+------------+
+

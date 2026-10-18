@@ -1,0 +1,43 @@
+{% extends 'store/base.html' %}
+{% block title %}Payment{% endblock %}
+{% block content %}
+<div class="steps">
+  <span class="step done"><i>✓</i>Cart</span><span class="step-line"></span>
+  <span class="step done"><i>✓</i>Shipping</span><span class="step-line"></span>
+  <span class="step now"><i>3</i>Payment</span>
+</div>
+
+<div class="auth" style="min-height:auto">
+  <div class="auth-card">
+    <h1>Pay for order #{{ order.order_id }}</h1>
+    <p class="muted">Amount due: <b style="color:var(--ink);font-size:1.2rem">₹{{ order.total_amount|floatformat:"2g" }}</b></p>
+
+    <div class="card3d" title="Hover to flip">
+      <div class="card3d-inner">
+        <div class="card3d-face">
+          <div class="row"><span class="chip-gold"></span><span class="spacer"></span><b style="letter-spacing:.08em">SHOPSPHERE</b></div>
+          <div class="number">•••• •••• •••• {{ order.order_id|stringformat:"04d" }}</div>
+          <div class="meta"><span>Demo payment</span><span>₹{{ order.total_amount|floatformat:"0g" }}</span></div>
+        </div>
+        <div class="card3d-face card3d-back">
+          <div class="strip"></div>
+          <p style="margin-top:70px;font-size:.85rem;opacity:.9">This is a simulated payment for a student project. No real money moves.</p>
+        </div>
+      </div>
+    </div>
+
+    <form method="POST" action="/payment/process/{{ order.order_id }}/">
+      {% csrf_token %}
+      <label>Payment method</label>
+      <div class="pay-methods">
+        <label><input type="radio" name="method" value="UPI" checked><span>UPI</span></label>
+        <label><input type="radio" name="method" value="Card"><span>Card</span></label>
+        <label><input type="radio" name="method" value="NetBanking"><span>Net&nbsp;banking</span></label>
+        <label><input type="radio" name="method" value="COD"><span>Cash on delivery</span></label>
+      </div>
+      <button type="submit" class="btn-primary btn-lg btn-block">Pay ₹{{ order.total_amount|floatformat:"0g" }}</button>
+    </form>
+    <p class="foot"><a href="/orders/">Pay later</a></p>
+  </div>
+</div>
+{% endblock %}

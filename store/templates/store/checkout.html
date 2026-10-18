@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="steps">
+  <span class="step done"><i>✓</i>Cart</span><span class="step-line"></span>
+  <span class="step now"><i>2</i>Shipping</span><span class="step-line"></span>
+  <span class="step"><i>3</i>Payment</span>
+</div>
+<h1>Checkout</h1>
+
+<div class="split">
+  <form method="POST" class="card">
+    {% csrf_token %}
+    <h2>Shipping address</h2>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <div class="field">
+      <label for="shipping_addr">Full address</label>
+      <textarea id="shipping_addr" name="shipping_addr" placeholder="House no., street, city, state, PIN code" required></textarea>
+    </div>
+    <button type="submit" class="btn-primary btn-lg btn-block">Place order</button>
+    <p class="hint" style="text-align:center">Stock is checked by the database the moment you place the order.</p>
+  </form>
+
+  <aside class="card summary">
+    <h2>Order summary</h2>
+    {% for item in cart_items %}
+      <div class="order-line">
+        <img src="{% url 'product_image' item.product.product_id %}" alt="">
+        <div style="flex:1"><div style="font-weight:650;font-size:.92rem">{{ item.product.product_title }}</div><span class="muted" style="font-size:.85rem">Qty {{ item.quantity }} × ₹{{ item.product.price|floatformat:"0g" }}</span></div>
+      </div>
+    {% endfor %}
+    <div class="line total"><span>Total</span><span>₹{{ total|floatformat:"2g" }}</span></div>
+  </aside>
+</div>
+{% endblock %}

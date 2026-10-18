@@ -1,0 +1,44 @@
+{% extends 'store/base.html' %}
+{% load tz %}
+{% block title %}Order #{{ order.order_id }}{% endblock %}
+{% block content %}
+<a href="/orders/" class="btn btn-ghost btn-sm" style="margin-bottom:16px">← All orders</a>
+<div class="page-head"><div><div class="eyebrow">Order details</div><h1>Order #{{ order.order_id }}</h1></div>{% include 'store/_order_status.html' %}</div>
+
+<div class="split">
+  <section class="card">
+    <h2>Items</h2>
+    {% for item in items %}
+      <div class="order-line">
+        <img src="{% url 'product_image' item.product.product_id %}" alt="">
+        <div style="flex:1"><a href="{% url 'product_detail' item.product.product_id %}" style="color:var(--ink);font-weight:650">{{ item.product.product_title }}</a>
+          <div class="muted" style="font-size:.86rem">{{ item.product.brand }} · Qty {{ item.quantity }} × ₹{{ item.unit_price|floatformat:"2g" }}</div></div>
+        <b>₹{{ item.subtotal|floatformat:"2g" }}</b>
+      </div>
+    {% endfor %}
+    <div class="summary" style="position:static"><div class="line total"><span>Total</span><span>₹{{ order.total_amount|floatformat:"2g" }}</span></div></div>
+  </section>
+
+  <aside class="card">
+    <h3>Progress</h3>
+    {% with s=order.order_status %}
+    <div class="timeline">
+      <span class="dot on"></span><span class="bar {% if s != 'Pending' %}on{% endif %}"></span>
+      <span class="dot {% if s != 'Pending' %}on{% endif %}"></span><span class="bar {% if s == 'Shipped' or s == 'Delivered' %}on{% endif %}"></span>
+      <span class="dot {% if s == 'Shipped' or s == 'Delivered' %}on{% endif %}"></span><span class="bar {% if s == 'Delivered' %}on{% endif %}"></span>
+      <span class="dot {% if s == 'Delivered' %}on{% endif %}"></span>
+    </div>
+    <div class="timeline-labels"><span>Placed</span><span>Paid</span><span>Shipped</span><span>Delivered</span></div>
+    {% endwith %}
+    <hr>
+    <div class="stack">
+      <div><span class="muted">Ordered on</span><br><b>{{ order.order_date|localtime|date:"d M Y, H:i" }}</b></div>
+      <div><span class="muted">Expected delivery</span><br><b>{% if order.delivery_date %}{{ order.delivery_date|localtime|date:"d M Y" }}{% else %}After payment{% endif %}</b></div>
+      <div><span class="muted">Ship to</span><br><b>{{ order.shipping_addr }}</b></div>
+    </div>
+    {% if order.order_status == 'Pending' %}<a href="{% url 'payment_page' order.order_id %}" class="btn btn-warm btn-block" style="margin-top:18px">Pay now</a>
+    <form method="POST" action="{% url 'cancel_order' order.order_id %}" data-confirm="Cancel order #{{ order.order_id }}? The items go back in stock." style="margin-top:10px">{% csrf_token %}<button type="submit" class="btn-danger btn-block">Cancel order</button></form>{% endif %}
+    {% if order.order_status == 'Cancelled' %}<div class="alert alert-warning" style="margin-top:18px">This order was cancelled.</div>{% endif %}
+  </aside>
+</div>
+{% endblock %}

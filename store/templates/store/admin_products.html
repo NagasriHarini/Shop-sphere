@@ -1,0 +1,24 @@
+{% extends 'store/base.html' %}
+{% block title %}Products{% endblock %}
+{% block content %}
+{% include 'store/_admin_nav.html' %}
+<div class="page-head"><div><div class="eyebrow">Catalogue</div><h1>Products</h1><p>{{ total }} product{{ total|pluralize }}{% if low %} with 5 or fewer in stock{% endif %}</p></div>
+  <div class="row">
+    <form method="get" class="row"><input type="search" name="q" value="{{ q }}" placeholder="Title, brand or ID" style="width:230px">{% if low %}<input type="hidden" name="stock" value="low">{% endif %}<button type="submit" class="btn-soft">Search</button></form>
+    <a href="{% if low %}/adminpanel/products/{% else %}?stock=low{% endif %}" class="chip {% if low %}on{% endif %}">Low stock</a>
+    <a href="/adminpanel/product/add/" class="btn btn-primary">+ Add product</a></div></div>
+<div class="table-wrap"><table>
+  <thead><tr><th></th><th>Product</th><th>Seller</th><th class="num">Price</th><th class="num">Stock</th><th></th></tr></thead>
+  <tbody>{% for p in products %}
+    <tr><td><img class="thumb" src="{% url 'product_image' p.product_id %}" alt="" loading="lazy"></td>
+      <td><a href="{% url 'product_detail' p.product_id %}" style="color:var(--ink);font-weight:650">{{ p.product_title }}</a><div class="muted" style="font-size:.82rem">#{{ p.product_id }} · {{ p.brand }} · {{ p.gender }} {{ p.category }}</div></td>
+      <td>{{ p.seller.seller_name|default:"—" }}</td><td class="num">₹{{ p.price|floatformat:"0g" }}</td>
+      <td class="num">{% if p.stock_quantity is not None and p.stock_quantity <= 5 %}<span class="badge {% if p.stock_quantity == 0 %}badge-bad{% else %}badge-warn{% endif %}">{{ p.stock_quantity }}</span>{% else %}{{ p.stock_quantity|default_if_none:"—" }}{% endif %}</td>
+      <td class="num"><div class="row" style="justify-content:flex-end">
+        <a href="/adminpanel/funnel/product/{{ p.product_id }}/" class="btn btn-ghost btn-sm">Funnel</a>
+        <a href="/adminpanel/product/{{ p.product_id }}/edit/" class="btn btn-soft btn-sm">Edit</a>
+        <form method="POST" action="/adminpanel/product/{{ p.product_id }}/delete/" data-confirm="Delete this product?">{% csrf_token %}<button type="submit" class="btn-danger btn-sm">Delete</button></form></div></td></tr>
+  {% empty %}<tr><td colspan="6" class="muted" style="text-align:center;padding:30px">No products found.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% include 'store/_pagination.html' %}
+{% endblock %}
