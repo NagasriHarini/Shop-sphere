@@ -1,2 +1,7 @@
-Django>=5.2,<7
-PyMySQL>=1.1
+
+Django>=5.2,<6.0
+gunicorn
+mssql-django
+pyodbc
+Pillow
+whitenoise
